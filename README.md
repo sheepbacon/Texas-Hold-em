@@ -5,5 +5,5 @@ Woring on now, all works done by myself.
 Function so far:
 
 1. create and shuffle card set
-2. delaal cards to player
-3. finding straight, flush, and straightflush
+2. delal cards, create 7 cards including 2 player cards and 5 board cards
+3. identifying straight, flush, and straightflush
