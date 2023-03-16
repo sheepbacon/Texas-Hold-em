@@ -6,4 +6,4 @@ Functions so far:
 
 1. create and shuffle card set
 2. delal cards, create 7 cards including 2 player cards and 5 board cards
-3. identifying straight, flush, and straightflush
+3. identifying straight, flush, pair, three a kind, four of a kind, highcard kicker and straightflush
