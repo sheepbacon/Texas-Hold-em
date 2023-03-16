@@ -3,22 +3,79 @@ import numpy as np
 
 class highcard():
     
-    def __init__(self) -> None:
-        pass
+    def __init__(self,number):
+        # any board should be highcard above
+        self.result = True
+        self.handrank = 0
+        numberkind = np.unique(number)
+        sort = sorted(numberkind)
+        # kickers are the top 5 largest numbers on the board, sort length must be 7
+        if (len(sort)==7):
+            kicker = [sort[i] for i in range(-5,0)]
+            self.kicker = kicker
+        else:
+            self.result = False
+            self.kicker = None
+        
+    
+    def __bool__(self):
+        return self.result
 
 
 class pair():
-    def __init__(self) -> None:
-        pass
-
+    
+    def __init__(self, number):
+        # default
+        self.result = False
+        self.handrank = None
+        self.kicker = None
+        self.pairnumber = None
+        
+        pair = -1 # this is to find the greatest pair number
+        for i in np.unique(number):  # scan all on-board number
+            idx = np.argwhere(number == i)   # find same number position
+            if (len(idx)>=2 and pair<i):
+                self.result = True
+                self.handrank = 1
+                pairnumber = [number[i] for i in idx.reshape(1, -1).squeeze(0)]
+                pair = pairnumber[0] # refresh the pair number
+                self.pairnumber = pair
+                numberkind = np.unique(number)
+                sort = sorted(numberkind)
+                if (len(sort)>=5):  # pair's kickers are the top 5 largest number on the board
+                    kicker = [sort[i] for i in range(-5,0)]
+                else:
+                    kicker = [sort[i] for i in range(len(sort))]
+                self.kicker = kicker
+    
+    def __bool__(self):
+        return self.result
 
 class twopair():
-    def __init__(self) -> None:
+    
+    def __init__(self):
         pass
     
 class threeofakind():
-    def __init__(self) -> None:
-        pass
+    
+    def __init__(self, number):
+        # default
+        self.result = False
+        self.handrank = None
+        self.kicker = None
+        
+        kicker = -1 # this is to find the greatest three of a kind number
+        for i in np.unique(number):  # scan all on-board number
+            idx = np.argwhere(number == i)   # find same number position
+            if (len(idx)==3 and kicker<i):
+                self.result = True
+                self.handrank = 3
+                threekindnumber = [number[i] for i in idx.reshape(1, -1).squeeze(0)]
+                kicker = threekindnumber[0] # refresh the kicker number
+                self.kicker = kicker
+    
+    def __bool__(self):
+        return self.result
 
 class straight():
     
@@ -77,9 +134,24 @@ class fullhouse():
         pass
 
 class fourofakind():
-    def __init__(self, num):
-        self.result = 0
-        self.handrank = 2
+    
+    def __init__(self, number):
+        # default setting
+        self.result = False
+        self.handrank = None
+        self.kicker = None
+        
+        for i in np.unique(number):  # scan all on-board number
+            idx = np.argwhere(number == i)   # find same number position
+            if (len(idx)==4):
+                self.result = True
+                self.handrank = 7
+                fourkindnumber = [number[i] for i in idx.reshape(1, -1).squeeze(0)]
+                self.kicker = fourkindnumber[0]
+                break
+        
+    def __bool__(self):
+        return self.result
 
 class straightflush():
     
@@ -94,18 +166,19 @@ class straightflush():
                 self.result = True
                 self.handrank = 8
                 self.kicker = straight(flush(num,color).flushnumber).kicker
-            
-            
+                        
     def __bool__(self):
         return self.result
 
+# This part should be rethink
 def judge(num, color):
     
-    if (straight(num).result):
+    if (straight(num)):
         return straight(num).handrank
     else:
         return 0
 
+#undone
 class hand_result():
     
     def __init__(self, board):
@@ -154,10 +227,8 @@ if __name__ == '__main__':
     
     # Result
     board = [flop_1,flop_2,flop_3,turn,river]+player
-    test_number =  [12,0,2,5,3,0,1]
-    test_color = [3,3,3,1,3,2,3]
-    print (bool(straight(test_number)))
-    print (straight(test_number).kicker)
-    print (bool(flush(test_number,test_color)))
-    print (flush(test_number,test_color).kicker)
-    print (bool(straightflush(test_number,test_color)))
+    test_number =  [9,10,11,8,7,4,1]
+    test_color = [10,10,10,1,10,2,3]
+    print (bool(highcard(test_number)))
+    print (highcard(test_number).kicker)
+    print (pair(test_number).pairnumber)
